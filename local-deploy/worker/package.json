@@ -1,0 +1,10 @@
+{
+  "name": "alice-code-bridge-worker",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "HTTP polling relay Worker that lets Alice reach a local coding bridge.",
+  "scripts": {
+    "test": "node --test \"test/**/*.test.mjs\""
+  }
+}

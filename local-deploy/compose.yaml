@@ -1,0 +1,53 @@
+name: alice-code-bridge
+services:
+  app:
+    image: ghcr.io/eluceon/alice-llm-bridge@sha256:56ec78513a1e6b10a16d6c88184f044aaec9586ea5f56b4f3a92de2a18ca8d4b
+    pull_policy: never
+    restart: unless-stopped
+    network_mode: host
+    env_file: bridge.env
+    environment:
+      CONFIG_PATH: /app/config.toml
+      RUST_LOG: warn
+    volumes:
+      - ./config.toml:/app/config.toml:ro
+    read_only: true
+    tmpfs:
+      - /tmp:size=16m
+    security_opt:
+      - no-new-privileges:true
+    cap_drop: [ALL]
+    mem_limit: 192m
+    logging:
+      driver: json-file
+      options: {max-size: 2m, max-file: '2'}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: [CMD, curl, '-fsS', 'http://127.0.0.1:18090/health']
+      interval: 30s
+      timeout: 5s
+      retries: 3
+  postgres:
+    image: postgres:16-alpine
+    pull_policy: never
+    restart: unless-stopped
+    env_file: postgres.env
+    ports: ['127.0.0.1:15434:5432']
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./init-app-db.sh:/docker-entrypoint-initdb.d/init-app-db.sh:ro
+    mem_limit: 192m
+    shm_size: 32m
+    command: [postgres, '-c', shared_buffers=32MB, '-c', max_connections=20]
+    logging:
+      driver: json-file
+      options: {max-size: 2m, max-file: '2'}
+    healthcheck:
+      test: [CMD-SHELL, 'pg_isready -U postgres -d bridge']
+      interval: 5s
+      timeout: 3s
+      retries: 10
+volumes:
+  pgdata:

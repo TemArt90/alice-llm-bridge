@@ -1,0 +1,5 @@
+# Isolated service environment; system Brotli 1.1 is incompatible with aiohttp 3.13.4.
+aiohttp==3.13.4
+Brotli>=1.2.0,<2
+requests>=2.32,<3
+PyYAML>=6,<7

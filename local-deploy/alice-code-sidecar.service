@@ -1,0 +1,18 @@
+[Unit]
+Description=Alice coding assistant OpenCode Go proxy and HTTPS polling relay
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=%h/alice-llm-bridge/local-deploy
+ExecStart=%h/alice-llm-bridge/local-deploy/.venv/bin/python %h/alice-llm-bridge/local-deploy/run_service.py
+Restart=always
+RestartSec=5
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+MemoryMax=160M
+
+[Install]
+WantedBy=default.target

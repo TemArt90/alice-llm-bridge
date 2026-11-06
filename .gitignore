@@ -4,3 +4,18 @@ config.toml
 .dev/
 .idea/
 .PVS-Studio/
+
+# Personal deployment secrets and runtime artifacts
+local-deploy/secrets.json
+local-deploy/settings.json
+local-deploy/config.toml
+local-deploy/*.env
+local-deploy/worker/deployment.json
+local-deploy/verification*.json
+local-deploy/*.bak-*
+local-deploy/worker/*.bak-*
+local-deploy/*.log
+local-deploy/.hermes/
+__pycache__/
+.venv/
+
